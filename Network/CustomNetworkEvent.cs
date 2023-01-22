@@ -1,5 +1,6 @@
+using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.Injection;
 using Stunlock.Network;
-using UnhollowerRuntimeLib;
 using Unity.Entities;
 using Wetstone.API;
 
@@ -60,7 +61,7 @@ internal class CustomNetworkEvent : Il2CppSystem.Object
     {
         ClassInjector.RegisterTypeInIl2Cpp(typeof(CustomNetworkEvent));
 
-        var il2cppty = UnhollowerRuntimeLib.Il2CppType.From(typeof(CustomNetworkEvent));
+        var il2cppty = Il2CppType.From(typeof(CustomNetworkEvent));
 
         if (TypeManager.FindTypeIndex(il2cppty) == -1)
         {

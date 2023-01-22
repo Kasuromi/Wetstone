@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BepInEx.IL2CPP.Hook;
+using BepInEx.Unity.IL2CPP.Hook;
 using HarmonyLib;
 using ProjectM;
 using ProjectM.UI;
@@ -36,7 +36,7 @@ static class Keybindings
 #nullable disable
     private static TryGetInputFlagLocalization_t TryGetInputFlagLocalization_Original;
     private static Harmony _harmony;
-    private static FastNativeDetour _detour;
+    private static INativeDetour _detour;
 #nullable enable
 
     public static void Initialize()

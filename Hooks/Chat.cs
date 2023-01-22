@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
-using BepInEx.IL2CPP.Hook;
+using BepInEx.Unity.IL2CPP.Hook;
 using ProjectM;
 using ProjectM.Network;
 using Unity.Entities;
@@ -21,7 +21,7 @@ public static class Chat
     /// </summary>
     public static event ChatEventHandler? OnChatMessage;
 
-    private static FastNativeDetour? Detour;
+    private static INativeDetour? Detour;
 
     public static unsafe void Initialize()
     {
@@ -43,9 +43,9 @@ public static class Chat
         OnChatMessage = null;
     }
 
-    private static unsafe void Hook(IntPtr _this, Entity* chatMessageEntity, ChatMessageEvent* chatMessage, FromCharacter* fromCharacter)
+    private static unsafe void Hook(IntPtr _this, Entity chatMessageEntity, ref ChatMessageEvent chatMessage, ref FromCharacter fromCharacter)
     {
-        var ev = new VChatEvent(fromCharacter->User, fromCharacter->Character, chatMessage->MessageText.ToString(), chatMessage->MessageType);
+        var ev = new VChatEvent(fromCharacter.User, fromCharacter.Character, chatMessage.MessageText.ToString(), chatMessage.MessageType);
 
         WetstonePlugin.Logger.LogInfo($"[Chat] [{ev.Type}] {ev.User.CharacterName}: {ev.Message}");
 
@@ -61,11 +61,11 @@ public static class Chat
             WetstonePlugin.Logger.LogError(ex);
         }
 
-        Original!(_this, chatMessageEntity, chatMessage, fromCharacter);
+        Original!(_this, chatMessageEntity, ref chatMessage, ref fromCharacter);
     }
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public unsafe delegate void OriginalLambdaBody(IntPtr _this, Entity* chatMessageEntity, ChatMessageEvent* chatMessage, FromCharacter* fromCharacter);
+    public unsafe delegate void OriginalLambdaBody(IntPtr _this, Entity chatMessageEntity, ref ChatMessageEvent chatMessage, ref FromCharacter fromCharacter);
 
     private static OriginalLambdaBody? Original;
 }
