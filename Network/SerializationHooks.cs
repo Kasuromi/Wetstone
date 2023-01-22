@@ -65,7 +65,7 @@ internal static class SerializationHooks
 
         // write out the event ID and the data
         netBuffer.Write((uint)SerializationHooks.WETSTONE_NETWORK_EVENT_ID);
-        data.Serialize(netBuffer);
+        data.Serialize(ref netBuffer);
     }
 
     // --------------------------------------------------------------------------------------
@@ -101,9 +101,9 @@ internal static class SerializationHooks
             try
             {
                 if (isFromServer)
-                    handler.OnReceiveFromServer(netBuffer);
+                    handler.OnReceiveFromServer(ref netBuffer);
                 else
-                    handler.OnReceiveFromClient(eventParams.FromCharacter, netBuffer);
+                    handler.OnReceiveFromClient(eventParams.FromCharacter, ref netBuffer);
             }
             catch (Exception ex)
             {

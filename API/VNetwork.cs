@@ -16,10 +16,10 @@ namespace Wetstone.API;
 public interface VNetworkMessage
 {
     /// <summary>Serialize this value to the given writer.</summary>
-    void Serialize(NetBufferOut writer);
+    void Serialize(ref NetBufferOut writer);
 
     /// <summary>Deserialize values from the given reader and update the current instance.</summary>
-    void Deserialize(NetBufferIn reader);
+    void Deserialize(ref NetBufferIn reader);
 }
 
 /// <summary>
@@ -56,11 +56,11 @@ public static class VNetworkRegistry
     public static void RegisterServerbound<T>(Action<FromCharacter, T> onMessageFromClient)
         where T : VNetworkMessage, new() => MessageRegistry.Register<T>(new()
         {
-            OnReceiveFromServer = (_) => { },
-            OnReceiveFromClient = (user, buf) =>
+            OnReceiveFromServer = (ref NetBufferIn _) => { },
+            OnReceiveFromClient = (FromCharacter user, ref NetBufferIn buf) =>
             {
                 var msg = new T();
-                msg.Deserialize(buf);
+                msg.Deserialize(ref buf);
                 onMessageFromClient(user, msg);
             }
         });
@@ -82,13 +82,13 @@ public static class VNetworkRegistry
     public static void RegisterClientbound<T>(Action<T> onMessageFromServer)
         where T : VNetworkMessage, new() => MessageRegistry.Register<T>(new()
         {
-            OnReceiveFromServer = buf =>
+            OnReceiveFromServer = (ref NetBufferIn buf) =>
             {
                 var msg = new T();
-                msg.Deserialize(buf);
+                msg.Deserialize(ref buf);
                 onMessageFromServer(msg);
             },
-            OnReceiveFromClient = (_, _) => { }
+            OnReceiveFromClient = (FromCharacter _, ref NetBufferIn _) => { }
         });
 
     /// <summary>
@@ -109,16 +109,16 @@ public static class VNetworkRegistry
     public static void RegisterBiDirectional<T>(Action<T> onMessageFromServer, Action<FromCharacter, T> onMessageFromClient)
         where T : VNetworkMessage, new() => MessageRegistry.Register<T>(new()
         {
-            OnReceiveFromServer = buf =>
+            OnReceiveFromServer = (ref NetBufferIn buf) =>
             {
                 var msg = new T();
-                msg.Deserialize(buf);
+                msg.Deserialize(ref buf);
                 onMessageFromServer(msg);
             },
-            OnReceiveFromClient = (user, buf) =>
+            OnReceiveFromClient = (FromCharacter user, ref NetBufferIn buf) =>
             {
                 var msg = new T();
-                msg.Deserialize(buf);
+                msg.Deserialize(ref buf);
                 onMessageFromClient(user, msg);
             }
         });

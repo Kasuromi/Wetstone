@@ -37,7 +37,7 @@ internal class CustomNetworkEvent : Il2CppSystem.Object
     }
 
     // Serialize the entire event to the net writer, except event ID.
-    internal void Serialize(NetBufferOut netBuffer)
+    internal void Serialize(ref NetBufferOut netBuffer)
     {
         if (Message == null)
             throw new System.Exception("Tried to serialize a CustomNetworkEvent with no message");
@@ -47,7 +47,7 @@ internal class CustomNetworkEvent : Il2CppSystem.Object
 
         try
         {
-            Message.Serialize(netBuffer);
+            Message.Serialize(ref netBuffer);
         }
         catch (System.Exception ex)
         {

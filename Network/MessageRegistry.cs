@@ -35,7 +35,9 @@ internal class MessageRegistry
 internal class RegisteredEventHandler
 {
 #nullable disable
-    internal Action<NetBufferIn> OnReceiveFromServer { get; init; }
-    internal Action<FromCharacter, NetBufferIn> OnReceiveFromClient { get; init; }
+    internal delegate void d_OnReceiveFromServer(ref NetBufferIn bufferIn);
+    internal delegate void d_OnReceiveFromClient(FromCharacter fromCharacter, ref NetBufferIn bufferIn);
+    internal d_OnReceiveFromServer OnReceiveFromServer { get; init; }
+    internal d_OnReceiveFromClient OnReceiveFromClient { get; init; }
 #nullable enable
 }

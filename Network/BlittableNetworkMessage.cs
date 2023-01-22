@@ -22,7 +22,7 @@ where T : unmanaged
         Value = instance;
     }
 
-    public void Deserialize(NetBufferIn reader)
+    public void Deserialize(ref NetBufferIn reader)
     {
         var size = reader.ReadInt32();
 
@@ -41,7 +41,7 @@ where T : unmanaged
         }
     }
 
-    public void Serialize(NetBufferOut writer)
+    public void Serialize(ref NetBufferOut writer)
     {
         unsafe
         {
