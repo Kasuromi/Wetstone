@@ -51,15 +51,6 @@ internal static class SerializationHooks
             return;
         }
 
-        // TODO(Kas): Is this still relevant for Il2CppInterop?
-
-        // we need to adjust by 0x10 here because the managed proxy that Il2CppUnhollower
-        // generates expects a boxed struct, whereas we have a pointer to an unboxed one.
-        // subtracting 0x10 is exactly two pointers, which allows us to fake a boxed struct
-        // with the same underlying data
-        
-        // OLD: var netBuffer = new NetBufferOut(new IntPtr((long)(netBufferOut - 0x10)));
-
         // extract the custom network event
         var data = (CustomNetworkEvent)VWorld.Server.EntityManager.GetComponentObject<Il2CppSystem.Object>(entity, CustomNetworkEvent.ComponentType);
 
@@ -77,10 +68,6 @@ internal static class SerializationHooks
 
     public unsafe static void DeserializeHook(EntityCommandBuffer commandBuffer, ref NetBufferIn netBuffer, ref DeserializeNetworkEventParams eventParams)
     {
-        // TODO(Kas): Is this still relevant for Il2CppInterop?
-        // this is the same adjustment that we do in the Serialize hook
-        // OLD: var netBufferIn = new NetBufferIn(new IntPtr((long)(netBuffer - 0x10)));
-
         // read event ID, and if it's not our custom event, call the original function
         var eventId = netBuffer.ReadUInt32();
         if (eventId != SerializationHooks.WETSTONE_NETWORK_EVENT_ID)
