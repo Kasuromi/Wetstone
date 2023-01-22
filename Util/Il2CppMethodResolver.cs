@@ -52,10 +52,7 @@ public class Il2CppMethodResolver
             }
 
             if (instr.Mnemonic == Mnemonic.Jmp)
-            {
-                WetstonePlugin.Logger.LogWarning($"Extracting target address");
                 return new IntPtr((long)ExtractTargetAddress(instr));
-            }
         }
 
         return methodPointer;
@@ -63,8 +60,6 @@ public class Il2CppMethodResolver
 
     public static unsafe IntPtr ResolveFromMethodInfo(INativeMethodInfoStruct methodInfo)
     {
-        WetstonePlugin.Logger.LogWarning($"MethodInfo->methodPointer {((nuint*)methodInfo.MethodInfoPointer)[0]:X2}");
-        WetstonePlugin.Logger.LogWarning($"MethodInfo->virtualMethodPointer {((nuint*)methodInfo.MethodInfoPointer)[1]:X2}");
         return ResolveMethodPointer(methodInfo.MethodPointer);
     }
 
